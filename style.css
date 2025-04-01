@@ -1,0 +1,21 @@
+body{
+    background-image: url(m.jpg);
+    background-size: cover;
+}
+.div1{
+    position: absolute;
+            top: -20px;
+            left: 28%;
+            transform: translateX(-50%);
+            z-index: 10;
+}
+input{
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 2px rgb(30, 74, 125) solid !important;
+    border-radius: 0 !important;
+    width: 300px !important;
+}
+input:focus{
+    box-shadow: none !important;
+}
