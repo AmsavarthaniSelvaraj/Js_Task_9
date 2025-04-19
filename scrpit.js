@@ -14,7 +14,7 @@ function submitForm(event) {
     } else if (age === "") {
         alert("Enter an age");
     } else if (bgrp === "") {
-        alert("Enter a BloodGroup");
+        alert("Enter a Blood Group");
     } else if (qualify === "") {
         alert("Enter a Qualification");
     } else {
@@ -27,26 +27,50 @@ function submitForm(event) {
         };
 
         let students = JSON.parse(localStorage.getItem("students")) || [];
-        students.push(studentData);
-        localStorage.setItem("students", JSON.stringify(students));
+        let editIndex = localStorage.getItem("editIndex");
 
-        alert("Submitted Successfully");
-        document.querySelector("form").reset(); 
+        if (editIndex !== null && editIndex !== "null") {
+            students[editIndex] = studentData;
+            localStorage.removeItem("editIndex");
+            localStorage.removeItem("editStudent");
+        } else {
+            students.push(studentData);
+        }
+
+        localStorage.setItem("students", JSON.stringify(students));
+        alert(editIndex !== null ? "Updated Successfully" : "Submitted Successfully");
+        document.querySelector("form").reset();
+        window.location.href = "index1.html";
     }
 }
 
 window.onload = function () {
-    let students = JSON.parse(localStorage.getItem("students")) || [];
-    let tableBody = document.getElementById("studentDetails");
+    let editIndex = localStorage.getItem("editIndex");
+    let student = JSON.parse(localStorage.getItem("editStudent"));
 
-    students.forEach(student => {
-        let row = `<tr>
-            <td>${student.name}</td>
-            <td>${student.dob}</td>
-            <td>${student.age}</td>
-            <td>${student.bgrp}</td>
-            <td>${student.qualify}</td>
-        </tr>`;
-        tableBody.innerHTML += row;
-    });
-};
+    if (editIndex !== null && student) {
+        document.getElementById("name").value = student.name;
+        document.getElementById("dob").value = student.dob;
+        document.getElementById("age").value = student.age;
+        document.getElementById("bgrp").value = student.bgrp;
+        document.getElementById("qualify").value = student.qualify;
+        const submitBtn = document.getElementById("submit");
+        submitBtn.innerText = "Update";
+    }
+}
+
+function editStudent(index) {
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+    let student = students[index];
+
+    localStorage.setItem("editIndex", index);
+    localStorage.setItem("editStudent", JSON.stringify(student));
+    window.location.href = "index.html";
+}
+
+function deleteStudent(index) {
+    let students = JSON.parse(localStorage.getItem("students")) || [];
+    students.splice(index, 1);
+    localStorage.setItem("students", JSON.stringify(students));
+    window.location.reload();
+}
